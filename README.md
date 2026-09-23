@@ -1,127 +1,75 @@
-# 🍽️ Canteen Sales Predictor
+# Canteen Sales Predictor
 
-A machine learning-based canteen demand prediction system that estimates the number of plates likely to be sold on a given day. It helps canteen operators decide **how much food to prepare**, reducing both food wastage and shortages.
+A terminal app that predicts how many plates a canteen will sell tomorrow, using linear regression. You type in past days of data, train the model, and it tells you how many plates to cook.
 
-## 🎯 Problem
+## What it does
 
-Canteens often have difficulty estimating daily food demand. Sales can change depending on factors such as **temperature, weekends, exams, and rainfall**.
+- Stores daily records (temperature, weekend, exam day, rain, plates sold) in `canteen.csv`
+- Trains a linear regression model with K-fold cross-validation
+- Shows how much each factor changes sales, in plates
+- Predicts tomorrow's sales and suggests how many plates to cook, with a safety buffer
+- Warns you when tomorrow's inputs fall outside the range of your data
 
-This project uses these factors along with historical sales data to predict the expected number of plates sold.
+## Requirements
 
-## 💡 Solution
+- Python 3.9 or newer
+- Libraries: `numpy`, `pandas`, `scikit-learn`, `rich`
 
-The system uses **Poisson Regression** to model plate sales as count data.
-
-The model takes four factors as input:
-
-* 🌡️ **Temperature**
-* 📅 **Weekend status**
-* 📝 **Exam day status**
-* 🌧️ **Rain status**
-
-It then predicts the expected number of plates to be sold and adds a **safety buffer based on the model's prediction error** to recommend how many plates should be prepared.
-
-## 🤖 Machine Learning
-
-* **Model:** Poisson Regression
-* **Validation:** K-Fold Cross-Validation
-* **Evaluation:** R² score and prediction error
-* **Data storage:** CSV
-* **Minimum training data:** 8 days
-* **Recommended:** 30+ days of real data
-
-The application also checks whether prediction inputs are outside the range of the training data and warns the user when the prediction may be less reliable.
-
-## 📊 Visualizations
-
-The project generates three visualizations:
-
-1. **Actual vs Predicted Sales** – compares real sales with model predictions.
-2. **Feature Effects** – shows how each factor affects predicted sales.
-3. **Temperature vs Sales** – displays the relationship between temperature and plate sales.
-
-## ✨ Features
-
-* Add real daily canteen sales data
-* Automatically save data to `canteen.csv`
-* Train and evaluate the ML model
-* Predict the next day's sales
-* Calculate a practical cooking recommendation
-* Detect out-of-range prediction inputs
-* Display learned feature effects
-* Generate graphs for analysis
-* Includes **200 synthetic demo records** for testing
-
-## 🛠️ Technologies Used
-
-**Python · NumPy · Pandas · Scikit-learn · Matplotlib · Rich**
-
-## ▶️ Installation & Usage
-
-Install the required libraries:
+Install them with:
 
 ```bash
-pip install numpy pandas matplotlib scikit-learn rich
+pip install numpy pandas scikit-learn rich
 ```
 
-Run the application:
+## How to run
 
 ```bash
-python canteen_sales_predictor.py
+python canteen_predictor_linear.py
 ```
 
-The interactive menu allows users to add data, train the model, make predictions, view graphs, and inspect the collected dataset.
+The app opens a menu:
 
-## 📁 Project Files
+| Option | What it does |
+|---|---|
+| 1 | Add one day of data by typing it in |
+| 2 | Load 200 fake demo days (for testing) |
+| 3 | Train the model and see what it learned |
+| 4 | Predict tomorrow |
+| 5 | Show all saved data |
+| 6 | Quit |
 
-```text
-canteen_sales_predictor.py   # Main application
-canteen.csv                  # Sales data
-canteen_graphs.png           # Generated visualizations
-README.md                    # Project documentation
-```
-## ▶️ How to Run
+## Quick start
 
-### 1. Clone the Repository
+1. Choose **2** to load demo data, or choose **1** repeatedly to enter real days.
+2. Choose **3** to train and see the effect of each factor.
+3. Choose **4**, answer the four questions about tomorrow, and read the forecast.
 
-```bash
-git clone https://github.com/aparajith-2105/Canteen-Sales-Predictor.git
-cd Canteen-Sales-Predictor
-```
+## Input columns
 
-### 2. Install Dependencies
+| Column | Meaning | Values |
+|---|---|---|
+| `temperature` | Temperature that day | Degrees Celsius |
+| `is_weekend` | Weekend or not | 1 = yes, 0 = no |
+| `is_exam_day` | Exam day or not | 1 = yes, 0 = no |
+| `is_raining` | Rain or not | 1 = yes, 0 = no |
+| `plates_sold` | Plates sold that day (target) | 0 or more |
 
-```bash
-pip install numpy pandas matplotlib scikit-learn rich
-```
+## How the prediction works
 
-### 3. Run the Application
+- **Model:** `LinearRegression`. Sales = base sales + (effect of each factor). Each factor adds or subtracts a fixed number of plates.
+- **Validation:** K-fold cross-validation (up to 5 folds). The app reports the mean R² and its range. Closer to 1 is better.
+- **Cook amount:** expected sales plus a safety buffer equal to the typical prediction error. The buffer is increased by 1.5 times if any input is outside your training data.
+- **No negatives:** predictions are clipped at 0 plates.
 
-```bash
-python canteen.py
-```
+## Tips and limits
 
-### 4. Try the Demo
+- You need at least 8 days to train, and 30 or more days for a reliable result. Under 20 days, treat the R² as a rough signal.
+- The demo data is generated from a straight-line formula, so it looks easier to predict than real sales. Use it only to test the app.
+- **Option 2 overwrites `canteen.csv`.** Back up your real data before loading the demo.
+- The model treats all days as independent. It does not know about trends over time, festivals, or menu changes unless you add them as columns.
+- Linear regression suits large daily totals (roughly 200+ plates). For small per-item counts, a Poisson regression version is a better fit.
 
-For a quick demonstration, select the following options from the menu:
+## Files
 
-```text
-2 → Load 200 fake demo days
-3 → Train the model
-4 → Predict tomorrow
-5 → Show graphs
-```
-
-You can also choose **1** to add your own daily canteen data.
-
-The application stores the collected data in `canteen.csv` and saves the generated graphs as `canteen_graphs.png`.
-
-
-
-## ⚠️ Note
-
-The included demo data is **synthetically generated** for testing the application. Real-world performance depends on collecting sufficient and reliable historical canteen data.
-
-## 🚀 Future Scope
-
-The project can be extended with additional factors such as **day-specific demand, menu type, holidays, special events, food prices, and historical weather data**, as well as a web or mobile interface.
+- `canteen_predictor_linear.py`: the program
+- `canteen.csv`: created automatically when you add data or load the demo
