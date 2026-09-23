@@ -80,6 +80,43 @@ canteen.csv                  # Sales data
 canteen_graphs.png           # Generated visualizations
 README.md                    # Project documentation
 ```
+## ▶️ How to Run
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/aparajith-2105/Canteen-Sales-Predictor.git
+cd Canteen-Sales-Predictor
+```
+
+### 2. Install Dependencies
+
+```bash
+pip install numpy pandas matplotlib scikit-learn rich
+```
+
+### 3. Run the Application
+
+```bash
+python canteen.py
+```
+
+### 4. Try the Demo
+
+For a quick demonstration, select the following options from the menu:
+
+```text
+2 → Load 200 fake demo days
+3 → Train the model
+4 → Predict tomorrow
+5 → Show graphs
+```
+
+You can also choose **1** to add your own daily canteen data.
+
+The application stores the collected data in `canteen.csv` and saves the generated graphs as `canteen_graphs.png`.
+
+
 
 ## ⚠️ Note
 
