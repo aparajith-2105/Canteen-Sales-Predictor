@@ -87,4 +87,4 @@ The included demo data is **synthetically generated** for testing the applicatio
 
 ## 🚀 Future Scope
 
-The project can be extended with additional factors such as **day-specific demand, menu type, holidays, special events, food prices, and historical weather data**, as well as a web or mobile interface.
+The project can be extended with additional factors such as **day-specific demand, menu type, holidays, special events, food prices, and historical weather data**, as well as a responsive web or mobile interface.
